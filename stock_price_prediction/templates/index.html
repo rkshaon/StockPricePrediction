@@ -6,17 +6,20 @@
 <div class="col-md-8 mt-5" style="margin-bottom: 100px !important;">
   <div>
     <h1>Upload data for train</h1>
-    <div class="mb-3">
-        <label for="exampleFormControlInput1" class="form-label">Company Name</label>
-        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Ex: Grameenphone">
-    </div>
-    <div class="mb-3">
-        <label for="exampleFormControlTextarea1" class="form-label">File</label>
-        <input class="form-control" type="file" placeholder=".form-control-lg" aria-label=".form-control-lg example">
-    </div>
-    <div class="mb-3">
-        <input class="form-control" type="submit" value="Upload">
-    </div>
+    <form class="" method="POST" action="{% url 'index' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Company Name</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Ex: Grameenphone">
+        </div>
+        <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">File</label>
+            <input class="form-control" type="file" name="file">
+        </div>
+        <div class="mb-3">
+            <input class="form-control" type="submit" value="Upload">
+        </div>
+    </form>
   </div>
 </div>
 {% endblock %}
