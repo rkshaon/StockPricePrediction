@@ -1,3 +1,5 @@
 /env
 /stock_price_prediction/__pycache__
+/upload_data/__pycache__
+/upload_data/migrations
 db.sqlite3
