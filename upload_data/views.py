@@ -51,15 +51,54 @@ def index(request):
         rmse = np.sqrt(
             np.mean((test_data['close'] - test_data['Predictions'])**2))
 
-        # Plot actual vs. predicted prices
+        # # Plot actual vs. predicted prices
+        # plt.figure(figsize=(10, 6))
+        # plt.plot(train_data.index, train_data['close'], label='Train Data')
+        # plt.plot(test_data.index, test_data['close'], label='Test Data')
+        # plt.plot(test_data.index, test_data['Predictions'],
+        #         label='Predictions', color='red')
+        # plt.xlabel('Date')
+        # plt.ylabel('Stock Price')
+        # plt.title('Stock Price Prediction using ARIMA')
+        # plt.legend()
+        # plt.show()
+
+        # # Get next 3 days stock price prediction using the trained ARIMA model
+        # forecast_steps = 3
+        # forecast, stderr, conf_int = model_fit.forecast(steps=forecast_steps)
+
+        # # Print the predictions for the next 3 days
+        # for i in range(forecast_steps):
+        #     print(f"Day {i+1}: Predicted Price = {forecast[i]:.2f}")
+
+        # # Plot the next 3 days predictions
+        # plt.figure(figsize=(10, 6))
+        # plt.plot(test_data.index, test_data['close'], label='Test Data')
+        # plt.plot(test_data.index[-1:] + pd.DateOffset(days=1),
+        #         forecast, label='Next 3 Days Predictions', color='red')
+        # plt.xlabel('Date')
+        # plt.ylabel('Stock Price')
+        # plt.title('Next 3 Days Stock Price Prediction using ARIMA')
+        # plt.legend()
+        # plt.show()
+
+
+        # Get next 3 days stock price prediction using the trained ARIMA model
+        forecast_steps = 3
+        forecast, stderr, conf_int = model_fit.forecast(steps=forecast_steps)
+
+        # Print the predictions for the next 3 days
+        for i in range(forecast_steps):
+            print(f"Day {i+1}: Predicted Price = {forecast}")
+
+        # Plot the next 3 days predictions
         plt.figure(figsize=(10, 6))
-        plt.plot(train_data.index, train_data['close'], label='Train Data')
         plt.plot(test_data.index, test_data['close'], label='Test Data')
-        plt.plot(test_data.index, test_data['Predictions'],
-                label='Predictions', color='red')
+        plt.plot(test_data.index[-1:] + pd.DateOffset(days=1),
+                forecast, label='Next 3 Days Predictions', color='red')
         plt.xlabel('Date')
         plt.ylabel('Stock Price')
-        plt.title('Stock Price Prediction using ARIMA')
+        plt.title('Next 3 Days Stock Price Prediction using ARIMA')
         plt.legend()
         plt.show()
 
