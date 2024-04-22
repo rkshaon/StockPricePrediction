@@ -5,6 +5,8 @@ from django.http import HttpResponse
 from statsmodels.tsa.arima.model import ARIMA
 
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 
@@ -42,31 +44,24 @@ def index(request):
         # arima model
         model = ARIMA(train_data['close'], order=(5, 1, 0))
         model_fit = model.fit()
-        print(model)
-        print(model_fit)
-        # print(df)
-        # print(len(train_data), len(test_data))
 
-        # # Make predictions
-        # predictions = model_fit.forecast(steps=len(test_data))
-        # test_data['Predictions'] = predictions
+        # Make predictions
+        predictions = model_fit.forecast(steps=len(test_data))
+        test_data['Predictions'] = predictions
+        rmse = np.sqrt(
+            np.mean((test_data['close'] - test_data['Predictions'])**2))
 
-        # # Evaluate model performance (RMSE)
-        # rmse = np.sqrt(mean_squared_error(
-        #     test_data['Close'], test_data['Predictions']))
-        # print(f"RMSE: {rmse:.2f}")
-
-        # # Plot actual vs. predicted prices
-        # plt.figure(figsize=(10, 6))
-        # plt.plot(train_data.index, train_data['Close'], label='Train Data')
-        # plt.plot(test_data.index, test_data['Close'], label='Test Data')
-        # plt.plot(test_data.index, test_data['Predictions'],
-        #         label='Predictions', color='red')
-        # plt.xlabel('Date')
-        # plt.ylabel('Stock Price')
-        # plt.title('Stock Price Prediction using ARIMA')
-        # plt.legend()
-        # plt.show()
+        # Plot actual vs. predicted prices
+        plt.figure(figsize=(10, 6))
+        plt.plot(train_data.index, train_data['close'], label='Train Data')
+        plt.plot(test_data.index, test_data['close'], label='Test Data')
+        plt.plot(test_data.index, test_data['Predictions'],
+                label='Predictions', color='red')
+        plt.xlabel('Date')
+        plt.ylabel('Stock Price')
+        plt.title('Stock Price Prediction using ARIMA')
+        plt.legend()
+        plt.show()
 
     context = {
         'title': 'Home | Stock Price',
