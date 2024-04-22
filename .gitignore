@@ -1,0 +1,3 @@
+/env
+/stock_price_prediction/__pycache__
+db.sqlite3
