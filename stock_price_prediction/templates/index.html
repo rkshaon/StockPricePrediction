@@ -21,5 +21,15 @@
         </div>
     </form>
   </div>
+  {% if predicted_data %}
+  <div>
+    <h2>Predicted stock prices of {{company_name}}</h2>
+    <ul class="list-group">
+      {% for temp in predicted_data %}
+        <li class="list-group-item">{{temp.date}} : {{temp.close}} BDT</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}
