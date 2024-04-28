@@ -13,6 +13,10 @@
             <input type="text" name="company" class="form-control" id="exampleFormControlInput1" placeholder="Ex: Any company name from DSE">
         </div>
         <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Company Code</label>
+            <input type="text" name="company_code" class="form-control" id="exampleFormControlInput1" placeholder="Ex: Any company's code name from DSE">
+        </div>
+        <div class="mb-3">
             <label for="exampleFormControlTextarea1" class="form-label">File</label>
             <input class="form-control" type="file" name="file">
         </div>
@@ -28,27 +32,72 @@
     <div class="row">
       <div class="col-4">
         <h3>Prophet Model</h3>
-        <ul class="list-group">
+        <table class="table table-bordered">
+          <thead>
+            <td>Date</td>
+            <td>Predicted Closing</td>
+            <!-- <td>Real Closing</td> -->
+          </thead>
           {% for temp in prophet_predicted_data %}
-            <li class="list-group-item">{{temp.date}} : {{temp.close}} BDT</li>
+          <tbody>
+            <td>{{ temp.date }}</td>
+            <td>{{ temp.close }}</td>
+            <!-- <td>
+              {% if temp.real is not none %}
+                {{ temp.real }}
+              {% else %}
+              Future date
+              {% endif %}              
+            </td> -->
+          </tbody>
           {% endfor %}
-        </ul>
+        </table>
       </div>
       <div class="col-4">
         <h3>LSTM Model</h3>
-        <ul class="list-group">
+        <table class="table table-bordered">
+          <thead>
+            <td>Date</td>
+            <td>Predicted Closing</td>
+            <!-- <td>Real Closing</td> -->
+          </thead>
           {% for temp in lstm_predicted_data %}
-            <li class="list-group-item">{{temp.date}} : {{temp.close}} BDT</li>
+          <tbody>
+            <td>{{ temp.date }}</td>
+            <td>{{ temp.close }}</td>
+            <!-- <td>
+              {% if temp.real is not none %}
+                {{ temp.real }}
+              {% else %}
+              Future date
+              {% endif %}              
+            </td> -->
+          </tbody>
           {% endfor %}
-        </ul>
+        </table>
       </div>
       <div class="col-4">
         <h3>ARIMA Model</h3>
-        <ul class="list-group">
+        <table class="table table-bordered">
+          <thead>
+            <td>Date</td>
+            <td>Predicted Closing</td>
+            <!-- <td>Real Closing</td> -->
+          </thead>
           {% for temp in arima_predicted_data %}
-            <li class="list-group-item">{{temp.date}} : {{temp.close}} BDT</li>
+          <tbody>
+            <td>{{ temp.date }}</td>
+            <td>{{ temp.close }}</td>
+            <!-- <td>
+              {% if temp.real is not none %}
+                {{ temp.real }}
+              {% else %}
+              Future date
+              {% endif %}              
+            </td> -->
+          </tbody>
           {% endfor %}
-        </ul>
+        </table>
       </div>
     </div>
   </div>

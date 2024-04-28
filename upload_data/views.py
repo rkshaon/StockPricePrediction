@@ -15,6 +15,8 @@ from keras.models import Sequential
 from keras.layers import LSTM, Dense
 from prophet import Prophet
 
+from upload_data.utility import get_real_data
+
 
 
 def index(request):
@@ -24,6 +26,7 @@ def index(request):
 
     if request.method == 'POST':
         company_name = request.POST.get('company')
+        company_code = request.POST.get('company_code')
         file = request.FILES.get('file')
 
         if not company_name or not file:
@@ -42,6 +45,7 @@ def index(request):
 
         context['company_name'] = company_name
         json_file_path = f'data_collection/{company_name}.json'
+        current_date = datetime.date.today()
 
         # Prophet
         df = pd.read_json(json_file_path)
@@ -64,10 +68,18 @@ def index(request):
 
         while sd != ed:
             if sd.weekday() not in weekends:
-                data.append({
+                temp = {
                     'date': sd,
-                    'close': round(forecast[forecast['ds'] == str(sd)]['yhat'].values[0], 2)
-                })
+                    'close': round(forecast[forecast['ds'] == str(sd)]['yhat'].values[0], 2),
+                    # 'real': None,
+                }
+
+                # if current_date > sd:
+                #     print(current_date, sd, 'Get this data')
+                #     get_real_data(company_code=company_code)
+                #     temp['real'] = 'coming-soon'
+                
+                data.append(temp)
 
             sd += datetime.timedelta(days=1)
             
@@ -159,11 +171,9 @@ def index(request):
         ed = sd + datetime.timedelta(days=7)
         weekends = {4, 5}
         i = 0
-        print(last_date)
         
         while sd != ed:
             if sd.weekday() not in weekends:
-                print(predicted_prices[i])
                 data.append({
                     'date': sd,
                     'close': round(predicted_prices[i], 2),
