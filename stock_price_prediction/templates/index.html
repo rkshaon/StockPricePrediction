@@ -3,7 +3,7 @@
   {{title}}
 {% endblock %}
 {% block content %}
-<div class="col-md-8 mt-5" style="margin-bottom: 100px !important;">
+<div class="col-md-12 mt-5" style="margin-bottom: 100px !important;">
   <div>
     <h1>Upload data for train</h1>
     <form class="" method="POST" action="{% url 'index' %}" enctype="multipart/form-data">
@@ -21,14 +21,36 @@
         </div>
     </form>
   </div>
-  {% if predicted_data %}
+  {% if company_name %}
   <div>
     <h2>Predicted stock prices of {{company_name}}</h2>
-    <ul class="list-group">
-      {% for temp in predicted_data %}
-        <li class="list-group-item">{{temp.date}} : {{temp.close}} BDT</li>
-      {% endfor %}
-    </ul>
+    <br><br>
+    <div class="row">
+      <div class="col-4">
+        <h3>Prophet Model</h3>
+        <ul class="list-group">
+          {% for temp in prophet_predicted_data %}
+            <li class="list-group-item">{{temp.date}} : {{temp.close}} BDT</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-4">
+        <h3>LSTM Model</h3>
+        <ul class="list-group">
+          {% for temp in lstm_predicted_data %}
+            <li class="list-group-item">{{temp.date}} : {{temp.close}} BDT</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-4">
+        <h3>Prophet Algorithm</h3>
+        <ul class="list-group">
+          {% for temp in prophet_predicted_data %}
+            <li class="list-group-item">{{temp.date}} : {{temp.close}} BDT</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
   </div>
   {% endif %}
 </div>
