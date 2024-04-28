@@ -43,9 +43,9 @@
         </ul>
       </div>
       <div class="col-4">
-        <h3>Prophet Algorithm</h3>
+        <h3>ARIMA Model</h3>
         <ul class="list-group">
-          {% for temp in prophet_predicted_data %}
+          {% for temp in arima_predicted_data %}
             <li class="list-group-item">{{temp.date}} : {{temp.close}} BDT</li>
           {% endfor %}
         </ul>

@@ -41,9 +41,9 @@ def index(request):
                 json_file.write(json_data)
 
         context['company_name'] = company_name
-
-        # Prophet        
         json_file_path = f'data_collection/{company_name}.json'
+
+        # Prophet
         df = pd.read_json(json_file_path)
         last_date = df.iloc[0]['date'].date()
         # Prepare the data
@@ -74,7 +74,6 @@ def index(request):
         context['prophet_predicted_data'] = data
 
         # LSTM
-        json_file_path = f'data_collection/{company_name}.json'
         df = pd.read_json(json_file_path)
         df['date'] = pd.to_datetime(df['date'])
         df.set_index('date', inplace=True)
@@ -121,7 +120,7 @@ def index(request):
         while sd != ed:
             if sd.weekday() not in weekends:
                 data.append({
-                    'date': sd,
+                    'date': sd.date(),
                     'close': round(predicted_prices[i][0], 2),
                 })
 
@@ -129,6 +128,51 @@ def index(request):
             sd += datetime.timedelta(days=1)
             
         context['lstm_predicted_data'] = data
+
+        # ARIMA
+        df = pd.read_json(json_file_path)        
+        
+        df['date'] = pd.to_datetime(df['date'])
+        df.set_index('date', inplace=True)
+        train_size = int(0.8 * len(df))
+        train_data, test_data = df[:train_size], df[train_size:]
+        
+        # arima model
+        model = ARIMA(train_data['close'], order=(5, 1, 0))
+        model_fit = model.fit()
+
+        # Make predictions
+        predictions = model_fit.forecast(steps=len(test_data))
+        test_data['Predictions'] = predictions
+        rmse = np.sqrt(
+            np.mean((test_data['close'] - test_data['Predictions'])**2))
+        
+        predicted_values = model_fit.forecast(steps=7)
+
+        # Extract the predicted stock prices
+        predicted_prices = predicted_values.tolist()
+
+        data = []
+        last_date = df.index[0]
+        last_date = last_date.date()
+        sd = last_date + pd.Timedelta(days=1)
+        ed = sd + datetime.timedelta(days=7)
+        weekends = {4, 5}
+        i = 0
+        print(last_date)
+        
+        while sd != ed:
+            if sd.weekday() not in weekends:
+                print(predicted_prices[i])
+                data.append({
+                    'date': sd,
+                    'close': round(predicted_prices[i], 2),
+                })
+
+            i += 1
+            sd += datetime.timedelta(days=1)
+            
+        context['arima_predicted_data'] = data
 
     template = loader.get_template('index.html')
 
