@@ -7,12 +7,12 @@ from statsmodels.tsa.arima.model import ARIMA
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import datetime
 
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
-# from fbprophet import Prophet
 from prophet import Prophet
 
 
@@ -57,32 +57,21 @@ def index(request):
         forecast = model.predict(future)
 
         data = []
-        
-        for i in range(0, 5):
-            temp = {
-                'date': (last_date + pd.Timedelta(days=(i+1))),
-            }
-            
-            try:
-                temp['close'] = round(forecast[forecast['ds'] == str(temp['date'])]['yhat'].values[0], 2)
-            except Exception as e:
-                temp['close'] = 0
-                
-            data.append(temp)
+        sd = last_date + pd.Timedelta(days=1)
+        ed = sd + datetime.timedelta(days=7)
+        weekends = {4, 5}
+
+        while sd != ed:
+            if sd.weekday() not in weekends:
+                data.append({
+                    'date': sd,
+                    'close': round(forecast[forecast['ds'] == str(sd)]['yhat'].values[0], 2)
+                })
+
+            sd += datetime.timedelta(days=1)
             
         context['predicted_data'] = data
         context['company_name'] = company_name
-        
-        # print(last_date)
-        # print(forecast)
-        # print(forecast[])
-        # specific_date = '2024-04-27'
-        # prediction_for_specific_date = forecast[forecast['ds'] == specific_date]['yhat'].values[0]
-        # print(specific_date, prediction_for_specific_date)
-        # # Visualize the forecast
-        # fig = model.plot(forecast)
-        # print(fig)
-
 
         # # LSTM
         # df['date'] = pd.to_datetime(df['date'])
